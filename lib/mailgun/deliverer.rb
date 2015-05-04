@@ -16,7 +16,9 @@ module Mailgun
     end
 
     def deliver!(rails_message)
-      mailgun_client.send_message build_mailgun_message_for(rails_message)
+      response = mailgun_client.send_message build_mailgun_message_for(rails_message)
+      response_json = JSON.parse(response)
+      rails_message["Message-ID"].update("Message-ID", response_json["id"])
     end
 
     private
